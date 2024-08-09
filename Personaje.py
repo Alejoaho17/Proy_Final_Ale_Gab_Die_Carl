@@ -15,4 +15,5 @@ class Personaje:
                f"Género: {self.genero}\n" \
                f"Especie: {self.especie}\n" \
                f"Naves: {', '.join(self.naves)}\n" \
-               f"Vehículos: {', '.join(self.vehiculos)}"
+               f"Vehículos: {', '.join(self.vehiculos)}\n"
+

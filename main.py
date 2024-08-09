@@ -3,6 +3,8 @@ from Mision import Mision
 from Personaje import Personaje
 from Planeta import Planeta
 from Vehiculo import Vehiculo
+import requests
+import json
 
 #funcion de menu, desde una lista muestra como menu las opciones con su validacion
 def menu(opciones):
@@ -16,17 +18,46 @@ def menu(opciones):
     opcion = int(opcion)-1
 
     return opcion
+def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
+    page = "https://www.swapi.tech/api/people"
+
+    # Mientras haya una página siguiente, seguir obteniendo personajes
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada personaje y obtener su información detallada
+        for character in results:
+            character_url = character["url"]
+            character = requests.get(character_url).json()["result"]["properties"]
+            #print(character)  
+            # Imprimir la información del personaje
+            nuevo_personaje = Personaje(character["name"], character["homeworld"], [], character['gender'], "", [], [])
+            lista_personajes.append(nuevo_personaje)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
+    
+
+#obtener info de api
 
 #Main
 def main():
+    lista_peliculas = []
+    lista_especies = []
+    lista_planetas = []
+    lista_personajes = []
+    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes)
+
     while True:
         opciones = ["Ver listas", "Buscar personaje", "Graficos", "Estadisticas", "Mision", "Salir"]
         opcion = menu(opciones)
         
         if opcion == 0:
-            listas()
+            listas(lista_peliculas, lista_especies, lista_planetas)
         elif opcion == 1:
-            buscar()
+            buscar(lista_personajes)
         elif opcion == 2:
             graficos()
         elif opcion == 3:
@@ -48,7 +79,7 @@ def listas(lista_peliculas, lista_especies, lista_planetas):
             for i, pelicula in enumerate(lista_peliculas):
                 print(i+1)
                 print(pelicula.__str__())
-                
+
         elif opcion == 1:
             for i, especie in enumerate(lista_especies):
                 print(i+1)
@@ -63,12 +94,13 @@ def listas(lista_peliculas, lista_especies, lista_planetas):
 
 #Funcion de busqueda de personajes
 def buscar(personajes):
-    busqueda = input("Ingrese el nombre del personaje que desea buscar")
+    busqueda = input("Ingrese el nombre del personaje que desea buscar: ")
     
     contador = 1
     for i in personajes:
-        if busqueda in i.nombre:
-            print(contador)
+        if busqueda.upper() in i.nombre.upper():
+            print("")
+            print('----'+contador+'----')
             print(i.__str__())
             contador = contador + 1
 
