@@ -38,18 +38,26 @@ def main():
             break
 
 #Funcion para mostrar las distintas listas - peliculas, especies, planetas
-def listas():
+def listas(lista_peliculas, lista_especies, lista_planetas):
     while True:
         opciones = ["Lista de Películas de la saga", "Lista de las especies de seres vivos de la saga", "Lista de planetas", "Salir"]
         opcion = menu(opciones)
 
         
         if opcion == 0:
-            pass
+            for i, pelicula in enumerate(lista_peliculas):
+                print(i+1)
+                print(pelicula.__str__())
+                
         elif opcion == 1:
-            pass
+            for i, especie in enumerate(lista_especies):
+                print(i+1)
+                print(especie.__str__())
+
         elif opcion == 2:
-            pass
+            for i, planeta in enumerate(lista_planetas):
+                print(i+1)
+                print(planeta.__str__())
         elif opcion == 3:
             break
 
@@ -61,7 +69,7 @@ def buscar(personajes):
     for i in personajes:
         if busqueda in i.nombre:
             print(contador)
-            print(i.mostrar)
+            print(i.__str__())
             contador = contador + 1
 
 #Funcion para mostrar cantidad de personajes nacidos en cada planeta, características de naves
