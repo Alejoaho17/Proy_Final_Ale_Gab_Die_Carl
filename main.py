@@ -18,7 +18,7 @@ def menu(opciones):
 
 def main():
     while True:
-        opciones = ["Ver listas", "Buscar personaje", "Graficos", "Mision", "Salir"]
+        opciones = ["Ver listas", "Buscar personaje", "Graficos", "Estadisticas", "Mision", "Salir"]
         opcion = menu(opciones)
         
         if opcion == 0:
@@ -28,22 +28,65 @@ def main():
         elif opcion == 2:
             graficos()
         elif opcion == 3:
-            mision()
+            estadisticas()
         elif opcion == 4:
+            mision()
+        elif opcion == 5:
             print("Hasta luego")
             break
 
 def listas():
-    pass
+    while True:
+        opciones = ["Lista de Películas de la saga", "Lista de las especies de seres vivos de la saga", "Lista de planetas", "Salir"]
+        opcion = menu(opciones)
+
+        
+        if opcion == 0:
+            pass
+        elif opcion == 1:
+            pass
+        elif opcion == 2:
+            pass
+        elif opcion == 3:
+            break
 
 def buscar():
     pass
 
 def graficos():
-    pass
+    while True:
+        opciones = ["Gráfico de cantidad de personajes nacidos en cada planeta", "Gráficos de características de naves", "Graficos", "Mision", "Salir"]
+        opcion = menu(opciones)
 
-def mision():
+        
+        if opcion == 0:
+            pass
+        elif opcion == 1:
+            pass
+        elif opcion == 2:
+            pass
+        elif opcion == 3:
+            pass
+        elif opcion == 4:
+            break
+
+def estadisticas():
     pass
+    
+def mision():
+    while True:
+        opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
+        opcion = menu(opciones)
+
+        
+        if opcion == 0:
+            pass
+        elif opcion == 1:
+            pass
+        elif opcion == 2:
+            pass
+        elif opcion == 3:
+            break
 
     
     
