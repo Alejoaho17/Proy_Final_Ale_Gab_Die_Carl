@@ -16,3 +16,4 @@ class Especie:
                f"Lengua Materna: {self.lengua_materna}\n" \
                f"Personajes que Pertenecen: {', '.join(self.personajes_pertenecen)}\n" \
                f"Episodios: {', '.join(self.episodios)}"
+

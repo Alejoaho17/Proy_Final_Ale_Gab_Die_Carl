@@ -19,6 +19,7 @@ def menu(opciones):
     opcion = int(opcion)-1
 
     return opcion
+#obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
     '''page = "https://www.swapi.tech/api/people"
 
@@ -39,7 +40,10 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-    '''
+    
+    
+
+
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
 
@@ -55,8 +59,31 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         # Puedes crear una instancia de una clase Pelicula si tienes una clase definida
         nuevo_pelicula = Pelicula(pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"])
         lista_peliculas.append(nuevo_pelicula)
+    '''
 
-    #obtener info de api
+
+    page = "https://www.swapi.tech/api/species"
+
+    # Mientras haya una página siguiente, seguir obteniendo personajes
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada personaje y obtener su información detallada
+        for especie in results:
+            especie_url = especie["url"]
+            especie = requests.get(especie_url).json()["result"]["properties"]
+            print(especie)  
+            # Imprimir la información del personaje
+            nuevo_especie = Especie(especie["name"], especie["homeworld"], especie["classification"], especie['homeworld'], especie["language"], especie["people"], [])
+            lista_especies.append(nuevo_especie)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
+    
+    
+    
 
 #Main
 def main():
