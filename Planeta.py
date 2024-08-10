@@ -15,4 +15,4 @@ class Planeta:
                f"Cantidad de Habitantes: {self.cantidad_habitantes}\n" \
                f"Tipo de Clima: {self.tipo_clima}\n" \
                f"Episodios: {', '.join(self.episodios)}\n" \
-               f"Personajes Originarios: {', '.join(self.personajes)}"
+               f"Personajes Originarios: {', '.join(self.personajes)}\n"

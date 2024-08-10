@@ -59,7 +59,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         # Puedes crear una instancia de una clase Pelicula si tienes una clase definida
         nuevo_pelicula = Pelicula(pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"])
         lista_peliculas.append(nuevo_pelicula)
-    '''
+    
 
 
     page = "https://www.swapi.tech/api/species"
@@ -74,15 +74,38 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         for especie in results:
             especie_url = especie["url"]
             especie = requests.get(especie_url).json()["result"]["properties"]
-            print(especie)  
+            #print(especie)  
             # Imprimir la información del personaje
             nuevo_especie = Especie(especie["name"], especie["homeworld"], especie["classification"], especie['homeworld'], especie["language"], especie["people"], [])
             lista_especies.append(nuevo_especie)
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
+    '''
+    
+    page = "https://www.swapi.tech/api/planets"
+
+    # Mientras haya una página siguiente, seguir obteniendo personajes
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada personaje y obtener su información detallada
+        for planeta in results:
+            planeta_url = planeta["url"]
+            planeta = requests.get(planeta_url).json()["result"]["properties"]
+            print(planeta)  
+            # Imprimir la información del personaje
+            nuevo_planeta = Planeta(planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
+            lista_planetas.append(nuevo_planeta)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
     
     
+
+
     
 
 #Main
