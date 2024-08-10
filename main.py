@@ -260,13 +260,15 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
             
             nueva_mision = Mision(mision, mision_planeta, mision_nave, mision_armas, mision_integrantes)
             lista_mision.append(nueva_mision)
-
-
-
+        
         elif opcion == 1:
             pass
         elif opcion == 2:
-            pass
+            print("Lista de misiones")
+            for i, mision in enumerate(lista_misiones):
+                print(i+1)
+                print(mision.__str__())
+
         elif opcion == 3:
             break
 
