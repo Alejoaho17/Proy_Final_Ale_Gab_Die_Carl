@@ -114,6 +114,7 @@ def main():
     lista_especies = []
     lista_planetas = []
     lista_personajes = []
+    lista_mision = []
     api(lista_peliculas, lista_especies, lista_planetas, lista_personajes)
 
     while True:
@@ -129,7 +130,7 @@ def main():
         elif opcion == 3:
             estadisticas()
         elif opcion == 4:
-            mision()
+            mision(lista_peliculas, lista_especies, lista_planetas, lista_mision)
         elif opcion == 5:
             print("Hasta luego")
             break
@@ -189,14 +190,79 @@ def estadisticas():
     pass
 
 #Funcion para crear, modificar y visualizar una mision     
-def mision():
+def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
     while True:
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
         opcion = menu(opciones)
 
         
         if opcion == 0:
-            pass
+            mision = input("Ingresa el nombre de la mision: ")
+
+            for i, planeta in enumerate(lista_planetas):
+                print(i+1, planeta.nombre)
+            mision_planeta = input("Ingresa el numero del planeta que desea: ")
+            cantidad_planetas = len(lista_planetas)
+            while not mision_planeta.isnumeric() or not int(mision_planeta) in range(1, cantidad+1):
+                mision_planeta = input("Error, Ingresa el numero del planeta que desea: ")
+            
+            mision_planeta = lista_planetas[int(mision_planeta)-1]
+
+
+
+            for i, nave in enumerate(lista_naves):
+                print(i+1, nave.nombre)
+            mision_nave = input("Ingresa el numero del planeta que desea: ")
+            cantidad_naves = len(lista_naves)
+            while not mision_nave.isnumeric() or not int(mision_nave) in range(1, cantidad+1):
+                mision_nave = input("Error, Ingresa el numero del planeta que desea: ")
+            
+            mision_nave = lista_naves[int(mision_nave)-1]
+
+
+            maximo = 7
+            mision_armas = []
+            while len(mision_armas) <= maximo:
+                for i, arma in enumerate(lista_armas):
+                    print(i+1, arma.nombre)
+                mision_arma = input("Ingresa el numero del arma que desea: ")
+                cantidad_armas = len(lista_armas)
+                while not mision_arma.isnumeric() or not int(mision_arma) in range(1, cantidad+1):
+                    mision_arma = input("Error, Ingresa el numero del planeta que desea: ")
+                
+                mision_arma = lista_armas[int(mision_arma)-1]
+
+                pregunta = input("Quieres agregar otra arma? 1. si 2. no")
+                while not pregunta.isnumeric() or not int(pregunta) in range(1, 3):
+                    pregunta = input("error, Quieres agregar otra arma? 1. si 2. no")
+                
+                if pregunta == "2":
+                    break
+            
+
+            mision_integrantes = []
+            while len(mision_integrantes) <= maximo:
+                for i, integrante in enumerate(lista_integrantes):
+                    print(i+1, integrante.nombre)
+                mision_integrante = input("Ingresa el numero del integrante que desea: ")
+                cantidad_integrantes = len(lista_integrantes)
+                while not mision_integrante.isnumeric() or not int(mision_integrante) in range(1, cantidad+1):
+                    mision_integrante = input("Error, Ingresa el numero del planeta que desea: ")
+                
+                mision_integrante = lista_integrantes[int(mision_integrante)-1]
+
+                pregunta = input("Quieres agregar otra integrante? 1. si 2. no")
+                while not pregunta.isnumeric() or not int(pregunta) in range(1, 3):
+                    pregunta = input("error, Quieres agregar otra integrante? 1. si 2. no")
+                
+                if pregunta == "2":
+                    break
+            
+            nueva_mision = Mision(mision, mision_planeta, mision_nave, mision_armas, mision_integrantes)
+            lista_mision.append(nueva_mision)
+
+
+
         elif opcion == 1:
             pass
         elif opcion == 2:
