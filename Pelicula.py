@@ -1,4 +1,4 @@
-class Personaje:
+class Pelicula:
     def __init__(self, titulo, numero_episodio, fecha_lanzamiento, opening_crawl, nombre_director):
         self.titulo = titulo
         self.numero_episodio = numero_episodio
@@ -12,3 +12,5 @@ class Personaje:
                f"fecha de lanzamiento: {self.fecha_lanzamiento}\n" \
                f"opening crawl: {self.opening_crawl}\n" \
                f"nombre del director: {self.nombre_director}\n"
+
+

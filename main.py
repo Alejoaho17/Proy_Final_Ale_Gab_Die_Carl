@@ -38,6 +38,10 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
+    
+
+    
+
 
 #obtener info de api
 
