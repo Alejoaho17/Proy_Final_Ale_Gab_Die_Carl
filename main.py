@@ -3,6 +3,7 @@ from Mision import Mision
 from Personaje import Personaje
 from Planeta import Planeta
 from Vehiculo import Vehiculo
+from Pelicula import Pelicula
 import requests
 import json
 
@@ -19,7 +20,7 @@ def menu(opciones):
 
     return opcion
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
-    page = "https://www.swapi.tech/api/people"
+    '''page = "https://www.swapi.tech/api/people"
 
     # Mientras haya una página siguiente, seguir obteniendo personajes
     while page:
@@ -38,12 +39,24 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-    
+    '''
+    # URL del endpoint de películas
+    url = "https://www.swapi.tech/api/films"
 
-    
+    # Obtener los datos de las películas
+    response = requests.get(url)
+    data = response.json()
 
+    # Iterar sobre cada película y obtener su información detallada
+    for pelicula in data["result"]:
+        # Imprimir la estructura de cada película para identificar la clave correcta
+        #print(pelicula)
+        pelicula = pelicula["properties"]
+        # Puedes crear una instancia de una clase Pelicula si tienes una clase definida
+        nuevo_pelicula = Pelicula(pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"])
+        lista_peliculas.append(nuevo_pelicula)
 
-#obtener info de api
+    #obtener info de api
 
 #Main
 def main():

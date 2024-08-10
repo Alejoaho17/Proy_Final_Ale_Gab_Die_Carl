@@ -12,5 +12,3 @@ class Pelicula:
                f"fecha de lanzamiento: {self.fecha_lanzamiento}\n" \
                f"opening crawl: {self.opening_crawl}\n" \
                f"nombre del director: {self.nombre_director}\n"
-
-
