@@ -21,7 +21,7 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
-    '''page = "https://www.swapi.tech/api/people"
+    page = "https://www.swapi.tech/api/people"
 
     # Mientras haya una página siguiente, seguir obteniendo personajes
     while page:
@@ -81,7 +81,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-    '''
+    
     
     page = "https://www.swapi.tech/api/planets"
 
@@ -95,7 +95,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         for planeta in results:
             planeta_url = planeta["url"]
             planeta = requests.get(planeta_url).json()["result"]["properties"]
-            print(planeta)  
+            #print(planeta)  
             # Imprimir la información del personaje
             nuevo_planeta = Planeta(planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
             lista_planetas.append(nuevo_planeta)
@@ -104,10 +104,6 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         page = data["next"]
     
     
-
-
-    
-
 #Main
 def main():
     lista_peliculas = []
@@ -195,7 +191,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
         opcion = menu(opciones)
 
-        
+        #Creacion y guardado de la mision - pide los campos, crea el objeto y guarda en la lista
         if opcion == 0:
             mision = input("Ingresa el nombre de la mision: ")
 
@@ -261,6 +257,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
             nueva_mision = Mision(mision, mision_planeta, mision_nave, mision_armas, mision_integrantes)
             lista_mision.append(nueva_mision)
         
+        #edicion de la mision - se escoge la mision, luego lo que deseas editar, para preceder a guardar la nueva info
         elif opcion == 1:
             for i, mision in enumerate(lista_mision):
                 print(f"{i+1}. {mision}")
@@ -291,6 +288,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
             
             print("Cambio con exito")
 
+        #visualizar mision - recorre la lista y muestra cada elemento
         elif opcion == 2:
             print("Lista de misiones")
             for i, mision in enumerate(lista_misiones):
