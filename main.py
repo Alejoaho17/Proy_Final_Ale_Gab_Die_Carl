@@ -262,7 +262,35 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
             lista_mision.append(nueva_mision)
         
         elif opcion == 1:
-            pass
+            for i, mision in enumerate(lista_mision):
+                print(f"{i+1}. {mision}")
+        
+            opcion = input("ingrese el numero de la mision que desea elegir: ")
+            while not opcion.isnumeric() or not int(opcion) in range(1, len(lista_mision)+1):
+                opcion = input("Error, ingrese el numero de la mision que desea elegir: ")
+
+            opcion = int(opcion)-1
+            mision = opcion
+
+            print("Que deseas modificar?")
+            opciones = ["Nombre de la mision", "planeta de la mision", "nave de la mision", "armas para la mision", "Integrantes de la mision"]
+            opcion = menu(opciones)
+
+            nuevo_valor = input("Ingrese el nuevo valor: ")
+
+            if opcion == 0:
+                mision.nombre_mision = nuevo_valor
+            elif opcion == 1:
+                mision.planeta_destino = nuevo_valor
+            elif opcion == 2:
+                mision.nave = nuevo_valor
+            elif opcion == 3:
+                mision.armas = nuevo_valor
+            elif opcion == 4:
+                mision.integrantes = nuevo_valor
+            
+            print("Cambio con exito")
+
         elif opcion == 2:
             print("Lista de misiones")
             for i, mision in enumerate(lista_misiones):
