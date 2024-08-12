@@ -81,7 +81,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-    '''
+    
     
     page = "https://www.swapi.tech/api/planets"
 
@@ -95,19 +95,15 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         for planeta in results:
             planeta_url = planeta["url"]
             planeta = requests.get(planeta_url).json()["result"]["properties"]
-            print(planeta)  
+            #print(planeta)  
             # Imprimir la información del personaje
             nuevo_planeta = Planeta(planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
             lista_planetas.append(nuevo_planeta)
             
         # Actualizar la URL de la siguiente página
-        page = data["next"]
+        page = data["next"]'''
     
     
-
-
-    
-
 #Main
 def main():
     lista_peliculas = []
@@ -136,26 +132,30 @@ def main():
             break
 
 #Funcion para mostrar las distintas listas - peliculas, especies, planetas
+#Recorre la lista de peliculas, especies y planetas y las imprime y las enumera
 def listas(lista_peliculas, lista_especies, lista_planetas):
     while True:
         opciones = ["Lista de Películas de la saga", "Lista de las especies de seres vivos de la saga", "Lista de planetas", "Salir"]
         opcion = menu(opciones)
 
-        
+        #Lista de Películas de la saga
         if opcion == 0:
             for i, pelicula in enumerate(lista_peliculas):
                 print(i+1)
                 print(pelicula.__str__())
 
+        #Lista de las especies de seres vivos de la saga
         elif opcion == 1:
             for i, especie in enumerate(lista_especies):
                 print(i+1)
                 print(especie.__str__())
-
+        
+        #Lista de planetas
         elif opcion == 2:
             for i, planeta in enumerate(lista_planetas):
                 print(i+1)
                 print(planeta.__str__())
+        
         elif opcion == 3:
             break
 
@@ -163,6 +163,7 @@ def listas(lista_peliculas, lista_especies, lista_planetas):
 def buscar(personajes):
     busqueda = input("Ingrese el nombre del personaje que desea buscar: ")
     
+    #Recorre la lista de personajes, si el nombre del objecto contiene el string que se busca muestra el objecto
     contador = 1
     for i in personajes:
         if busqueda.upper() in i.nombre.upper():
@@ -195,7 +196,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
         opcion = menu(opciones)
 
-        
+        #Creacion y guardado de la mision - pide los campos, crea el objeto y guarda en la lista
         if opcion == 0:
             mision = input("Ingresa el nombre de la mision: ")
 
@@ -260,13 +261,27 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
             
             nueva_mision = Mision(mision, mision_planeta, mision_nave, mision_armas, mision_integrantes)
             lista_mision.append(nueva_mision)
-
-
-
+        
+        #edicion de la mision - se escoge la mision, luego lo que deseas editar, para preceder a guardar la nueva info
         elif opcion == 1:
-            pass
+            for i, mision in enumerate(lista_mision):
+                print(f"{i+1}. {mision}")
+        
+            opcion = input("ingrese el numero de la mision que desea elegir: ")
+            while not opcion.isnumeric() or not int(opcion) in range(1, len(lista_mision)+1):
+                opcion = input("Error, ingrese el numero de la mision que desea elegir: ")
+
+            mision = int(opcion)-1
+            mision.modificacion()
+
+        #visualizar mision - recorre la lista y muestra cada elemento
         elif opcion == 2:
-            pass
+            print("Lista de misiones")
+            for i, mision in enumerate(lista_misiones):
+                print(i+1)
+                print(mision.__str__())
+
+        #Salir
         elif opcion == 3:
             break
 
