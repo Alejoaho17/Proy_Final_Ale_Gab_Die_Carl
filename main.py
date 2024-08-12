@@ -5,6 +5,7 @@ from Planeta import Planeta
 from Nave import Nave
 from Pelicula import Pelicula
 from Arma import Arma
+from Vehiculo import Vehiculo
 import requests
 import json
 import csv
@@ -22,7 +23,7 @@ def menu(opciones):
 
     return opcion
 #obtener info de api
-def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves, lista_mision):
+def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves,lista_mision,lista_vehiculos):
 
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
@@ -42,6 +43,31 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         lista_peliculas.append(nuevo_pelicula)
     
 
+    page = "https://www.swapi.tech/api/vehicles"
+
+    # Mientras haya una página siguiente, seguir obteniendo personajes
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada personaje y obtener su información detallada
+        for vehiculo in results:
+            vehiculo_url = vehiculo["url"]
+            vehiculo = requests.get(vehiculo_url).json()
+            id = vehiculo["result"]["uid"]
+            vehiculo = vehiculo["result"]["properties"]
+            #print(vehiculo)  
+            # Imprimir la información del personaje
+            nuevo_vehiculo = Vehiculo(id, vehiculo["name"], vehiculo["model"], vehiculo["manufacturer"], vehiculo["cost_in_credits"], vehiculo["length"], vehiculo["max_atmosphering_speed"], vehiculo["crew"], vehiculo["passengers"], vehiculo["cargo_capacity"], vehiculo["consumables"], vehiculo["vehicle_class"], vehiculo["pilots"], vehiculo["films"], vehiculo["url"])
+                        
+            lista_vehiculos.append(nuevo_vehiculo)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
+    
+    
+    
 
     page = "https://www.swapi.tech/api/species"
 
@@ -121,7 +147,20 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             for especie in lista_especies:
                 for url in especie.personajes_pertenecen:
                     if url.split('/')[-1] == id:
+                        #print("si")
                         nuevo_personaje.especie = especie.nombre
+
+            for nave in lista_naves:
+                for url in nave.pilots:
+                    if url.split('/')[-1] == id:
+                        nuevo_personaje.naves.append(nave.name)
+
+            for vehiculo in lista_vehiculos:
+                for url in vehiculo.pilots:
+                    if url.split('/')[-1] == id:
+                        nuevo_personaje.vehiculos.append(vehiculo.name)
+            
+
             
             lista_personajes.append(nuevo_personaje)
             
@@ -157,7 +196,6 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             
             for pelicula in lista_peliculas:
                 for url in pelicula.planetas:
-                    
                     if (url.split('/')[-1] == id):
                         (nuevo_planeta.episodios).append(pelicula.titulo)
 
@@ -201,8 +239,9 @@ def main():
     lista_mision = []
     lista_armas = []
     lista_naves = []
+    lista_vehiculos = []
 
-    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves,lista_mision)
+    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves,lista_mision,lista_vehiculos)
     
     while True:
         opciones = ["Ver listas", "Buscar personaje", "Graficos", "Estadisticas", "Mision", "Salir"]
