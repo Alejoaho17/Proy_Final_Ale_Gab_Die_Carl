@@ -249,32 +249,81 @@ def grafico_naves():
 
 #funcion para mostrar estadistica sobre naves
 def estadisticas():
-    pass
-    [
-        ["qdw", 4]
-        ["dw", 24]
-        ["ddw", 45]
-        ["qdsw", 5]
-    ]
+    naves = []
+    with open('starwars/csv/starships.csv','r') as file:
+        # Crea un lector de CSV
+        reader = csv.reader(file)
+        
+        # Recorre cada fila en el archivo CSV
+        for row in reader:
+            if row[0] != "id":
+                naves.append([row[11], row[12], row[6], row[4]])
+
+    dicc_hiperimpulsor = {
+        'titulo': 'Hiperimpulsor',
+        'promedio': 0,
+        'moda': 0,
+        'max': 0,
+        'min': 0
+    }
+    dicc_MGLT = {
+        'titulo': 'MGLT',
+        'promedio': 0,
+        'moda': 0,
+        'max': 0,
+        'min': 0
+    }
+    dicc_velocidad = {
+        'titulo': 'velocidad máxima en atmósfera',
+        'promedio': 0,
+        'moda': 0,
+        'max': 0,
+        'min': 0
+    }
+    dicc_costo = {
+        'titulo': 'costo',
+        'promedio': 0,
+        'moda': 0,
+        'max': 0,
+        'min': 0
+    }
+    
+    calculos_estadistica(dicc_hiperimpulsor, naves, 0)
+    calculos_estadistica(dicc_MGLT, naves, 1)
+    calculos_estadistica(dicc_velocidad, naves, 2)
+    calculos_estadistica(dicc_costo, naves, 3)
+    
 
 
-def calcular_promedio(lista):
+def calculos_estadistica(dicc, lista, posicion):
+    promedio = calcular_promedio(lista, posicion)
+    moda = calcular_moda(lista, posicion)
+    max_d, min_d = calcular_maximo_minimo(lista, posicion)
+
+    dicc["promedio"] = promedio
+    dicc["moda"] = moda
+    dicc["max"] = max_d
+    dicc["min"] = min_d
+
+
+
+def calcular_promedio(lista, posicion):
     suma = 0
     
     # Recorremos cada sublista en la lista principal
     for item in lista:
-        suma += item[1]
+        suma += item[posicion]
     
     # Calculamos el promedio dividiendo la suma por el número de elementos
     return suma / len(lista)
 
 
-def calcular_moda(lista):
+def calcular_moda(lista, posicion):
     valores = []
     
     # Recorremos cada sublista en la lista principal
     for item in lista:
-        valores.append(item[1])
+        valores.append(item[posicion])
     
     frecuencia = {}
     # Recorremos la lista 'valores' para contar las repeticiones de cada valor
@@ -296,20 +345,20 @@ def calcular_moda(lista):
     return moda
 
 
-def calcular_maximo_minimo(lista):
-    # Inicializamos los valores de máximo y mínimo
-    maximo = lista[0][1]
-    minimo = lista[0][1]
-    
-    # Recorremos la lista para encontrar el máximo y mínimo
-    for item in lista:
-        valor = item[1]
-        if valor > maximo:
-            maximo = valor
-        if valor < minimo:
-            minimo = valor
-    
-    return maximo, minimo
+    def calcular_maximo_minimo(lista, posicion):
+        # Inicializamos los valores de máximo y mínimo
+        maximo = lista[0][posicion]
+        minimo = lista[0][posicion]
+        
+        # Recorremos la lista para encontrar el máximo y mínimo
+        for item in lista:
+            valor = item[posicion]
+            if valor > maximo:
+                maximo = valor
+            if valor < minimo:
+                minimo = valor
+        
+        return maximo, minimo
 
 #Funcion para crear, modificar y visualizar una mision     
 def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
