@@ -6,12 +6,13 @@ class Pelicula:
         self.fecha_lanzamiento = fecha_lanzamiento
         self.opening_crawl = opening_crawl
         self.nombre_director = nombre_director
-        self.espacies = especies
+        self.especies = especies
         self.personajes = personajes
 
     def __str__(self):
-        return f"Titulo: {self.titulo}\n" \
-               f"Numero de Episodio: {self.numero_episodio}\n" \
-               f"fecha de lanzamiento: {self.fecha_lanzamiento}\n" \
-               f"opening crawl: {self.opening_crawl}\n" \
-               f"nombre del director: {self.nombre_director}\n"
+        return f"-Titulo: {self.titulo}\n" \
+               f"-Numero de Episodio: {self.numero_episodio}\n" \
+               f"-fecha de lanzamiento: {self.fecha_lanzamiento}\n" \
+               f"-nombre del director: {self.nombre_director}\n" \
+               f"-opening crawl: {self.opening_crawl}\n" 
+               

@@ -2,7 +2,7 @@ from Especie import Especie
 from Mision import Mision
 from Personaje import Personaje
 from Planeta import Planeta
-from Vehiculo import Vehiculo
+from Nave import Nave
 from Pelicula import Pelicula
 from Arma import Arma
 import requests
@@ -22,8 +22,8 @@ def menu(opciones):
 
     return opcion
 #obtener info de api
-def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas):
-    ''' 
+def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves):
+     
 
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
@@ -36,9 +36,10 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
     for pelicula in data["result"]:
         # Imprimir la estructura de cada película para identificar la clave correcta
         #print(pelicula)
+        id = pelicula["uid"]
         pelicula = pelicula["properties"]
         # Puedes crear una instancia de una clase Pelicula si tienes una clase definida
-        nuevo_pelicula = Pelicula(pelicula["uid"], pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"], pelicula["species"], pelicula["characters"])
+        nuevo_pelicula = Pelicula(id, pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"], pelicula["species"], pelicula["characters"])
         lista_peliculas.append(nuevo_pelicula)
     
 
@@ -54,14 +55,16 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         # Iterar sobre cada personaje y obtener su información detallada
         for especie in results:
             especie_url = especie["url"]
-            especie = requests.get(especie_url).json()["result"]["properties"]
+            especie = requests.get(especie_url).json()
+            id = especie["result"]["uid"]
+            especie = especie["result"]["properties"]
             #print(especie)  
             # Imprimir la información del personaje
-            nuevo_especie = Especie(especie["uid"], especie["name"], especie["homeworld"], especie["classification"], especie['homeworld'], especie["language"], especie["people"], [])
+            nuevo_especie = Especie(id, especie["name"], especie["homeworld"], especie["classification"], especie['homeworld'], especie["language"], especie["people"], [])
             for pelicula in lista_peliculas:
                 for url in pelicula.especies:
-                    if url.split('/')[-1] == especie["uid"]:
-                        nuevo_especie.episodios.append(titulo)
+                    if url.split('/')[-1] == id:
+                        nuevo_especie.episodios.append(pelicula.titulo)
             
             lista_especies.append(nuevo_especie)
             
@@ -80,10 +83,13 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         # Iterar sobre cada personaje y obtener su información detallada
         for planeta in results:
             planeta_url = planeta["url"]
-            planeta = requests.get(planeta_url).json()["result"]["properties"]
+            
+            planeta = requests.get(planeta_url).json()
+            id = planeta["result"]["uid"]
+            planeta = planeta["result"]["properties"]
             #print(planeta)  
             # Imprimir la información del personaje
-            nuevo_planeta = Planeta(planeta["uid"], planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
+            nuevo_planeta = Planeta(id, planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
             for personaje in lista_personajes:
                 if personaje.nombre_planeta_origen == nuevo_planeta.nombre:
                     nuevo_planeta.personajes.append(personaje.nombre)
@@ -91,7 +97,29 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-        
+    
+    page = "https://www.swapi.tech/api/starships"
+
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada nave y obtener su información detallada
+        for nave in results:
+            nave_url = nave["url"]
+            
+            nave = requests.get(nave_url).json()
+            id = nave["result"]["uid"]
+            nave = nave["result"]["properties"]
+            
+            # Crear una nueva instancia de Nave
+            nueva_nave = Nave(id, nave["name"], nave["model"], nave["starship_class"], nave["manufacturer"], nave["cost_in_credits"], nave["length"], nave["crew"], nave["passengers"], nave["max_atmosphering_speed"], nave["hyperdrive_rating"], nave["MGLT"], nave["cargo_capacity"], nave["consumables"], nave["pilots"])
+            
+            lista_naves.append(nueva_nave)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
         
     page = "https://www.swapi.tech/api/people"
 
@@ -104,34 +132,37 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         # Iterar sobre cada personaje y obtener su información detallada
         for character in results:
             character_url = character["url"]
-            character = requests.get(character_url).json()["result"]["properties"]
+            character = requests.get(character_url).json()
+            id = character["result"]["uid"]
+            character = character["result"]["properties"]
             #print(character)  
             # Imprimir la información del personaje
-            nuevo_personaje = Personaje(character["uid"], character["name"], character["homeworld"], [], character['gender'], "", [], [])
+            nuevo_personaje = Personaje(id, character["name"], character["homeworld"], [], character['gender'], "", [], [])
             for pelicula in lista_peliculas:
                 for url in pelicula.personajes:
-                    if url.split('/')[-1] == character["uid"]:
-                        nuevo_personaje.episodios.append(titulo)
+                    if url.split('/')[-1] == id:
+                        nuevo_personaje.episodios.append(pelicula.titulo)
 
             for especie in lista_especies:
                 for url in especie.personajes_pertenecen:
-                    if url.split('/')[-1] == character["uid"]:
-                        nuevo_personaje.especie = nombre
+                    if url.split('/')[-1] == id:
+                        nuevo_personaje.especie = especie.nombre
             
             lista_personajes.append(nuevo_personaje)
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
         
+    
     with open('starwars/csv/weapons.csv','r') as file:
         
         reader = csv.reader(file)
         
         for row in reader:
             if row[0] != "id":
-                nueva_arma = Armas(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
-                planetas.append([row[1], 0])  
-    '''
+                nueva_arma = Arma(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                lista_armas.append([row[1], 0])  
+    
     
     
 #Main
@@ -142,8 +173,10 @@ def main():
     lista_personajes = []
     lista_mision = []
     lista_armas = []
-    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas)
+    lista_naves = []
 
+    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves)
+    
     while True:
         opciones = ["Ver listas", "Buscar personaje", "Graficos", "Estadisticas", "Mision", "Salir"]
         opcion = menu(opciones)
@@ -157,8 +190,9 @@ def main():
         elif opcion == 3:
             estadisticas()
         elif opcion == 4:
-            mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes, lista_armas)
+            mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_naves)
         elif opcion == 5:
+            guardar_mision(lista_mision)
             print("Hasta luego")
             break
 
@@ -410,7 +444,7 @@ def calcular_maximo_minimo(lista, posicion):
         return maximo, minimo
 
 #Funcion para crear, modificar y visualizar una mision     
-def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes, lista_armas):
+def mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_naves):
 
     while True:
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
@@ -424,35 +458,35 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_
                 print(i+1, planeta.nombre)
             mision_planeta = input("Ingresa el numero del planeta que desea: ")
             cantidad_planetas = len(lista_planetas)
-            while not mision_planeta.isnumeric() or not int(mision_planeta) in range(1, cantidad+1):
+            while not mision_planeta.isnumeric() or not int(mision_planeta) in range(1, cantidad_planetas+1):
                 mision_planeta = input("Error, Ingresa el numero del planeta que desea: ")
             
-            mision_planeta = lista_planetas[int(mision_planeta)-1]
+            mision_planeta = lista_planetas[int(mision_planeta)-1].nombre
 
 
 
             for i, nave in enumerate(lista_naves):
-                print(i+1, nave.nombre)
-            mision_nave = input("Ingresa el numero del planeta que desea: ")
+                print(i+1, nave.name)
+            mision_nave = input("Ingresa el numero del naves que desea: ")
             cantidad_naves = len(lista_naves)
-            while not mision_nave.isnumeric() or not int(mision_nave) in range(1, cantidad+1):
-                mision_nave = input("Error, Ingresa el numero del planeta que desea: ")
+            while not mision_nave.isnumeric() or not int(mision_nave) in range(1, cantidad_naves+1):
+                mision_nave = input("Error, Ingresa el numero del naves que desea: ")
             
-            mision_nave = lista_naves[int(mision_nave)-1]
+            mision_nave = lista_naves[int(mision_nave)-1].name
 
 
             maximo = 7
             mision_armas = []
             while len(mision_armas) <= maximo:
                 for i, arma in enumerate(lista_armas):
-                    print(i+1, arma.nombre)
+                    print(i+1, arma[0])
                 mision_arma = input("Ingresa el numero del arma que desea: ")
                 cantidad_armas = len(lista_armas)
-                while not mision_arma.isnumeric() or not int(mision_arma) in range(1, cantidad+1):
+                while not mision_arma.isnumeric() or not int(mision_arma) in range(1, cantidad_armas+1):
                     mision_arma = input("Error, Ingresa el numero del planeta que desea: ")
                 
                 mision_arma = lista_armas[int(mision_arma)-1]
-
+                mision_armas.append(mision_arma[0])
                 pregunta = input("Quieres agregar otra arma? 1. si 2. no")
                 while not pregunta.isnumeric() or not int(pregunta) in range(1, 3):
                     pregunta = input("error, Quieres agregar otra arma? 1. si 2. no")
@@ -466,11 +500,12 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_
                 for i, integrante in enumerate(lista_personajes):
                     print(i+1, integrante.nombre)
                 mision_integrante = input("Ingresa el numero del integrante que desea: ")
-                cantidad_integrantes = len(lista_integrantes)
-                while not mision_integrante.isnumeric() or not int(mision_integrante) in range(1, cantidad+1):
-                    mision_integrante = input("Error, Ingresa el numero del planeta que desea: ")
+                cantidad_integrantes = len(lista_personajes)
+                while not mision_integrante.isnumeric() or not int(mision_integrante) in range(1, cantidad_integrantes+1):
+                    mision_integrante = input("Error, Ingresa el numero del integrante que desea: ")
                 
-                mision_integrante = lista_integrantes[int(mision_integrante)-1]
+                mision_integrante = lista_personajes[int(mision_integrante)-1]
+                mision_integrantes.append(mision_integrante.nombre)
 
                 pregunta = input("Quieres agregar otra integrante? 1. si 2. no")
                 while not pregunta.isnumeric() or not int(pregunta) in range(1, 3):
@@ -484,16 +519,18 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_
         
         #edicion de la mision - se escoge la mision, luego lo que deseas editar, para preceder a guardar la nueva info
         elif opcion == 1:
-            for i, mision in enumerate(lista_mision):
-                print(f"{i+1}. {mision}")
-        
-            opcion = input("ingrese el numero de la mision que desea elegir: ")
-            while not opcion.isnumeric() or not int(opcion) in range(1, len(lista_mision)+1):
-                opcion = input("Error, ingrese el numero de la mision que desea elegir: ")
+            if len(lista_mision) != 0:
+                for i, mision in enumerate(lista_mision):
+                    print(f"{i+1}. {mision}")
+            
+                opcion = input("ingrese el numero de la mision que desea elegir: ")
+                while not opcion.isnumeric() or not int(opcion) in range(1, len(lista_mision)+1):
+                    opcion = input("Error, ingrese el numero de la mision que desea elegir: ")
 
-            mision = int(opcion)-1
-            mision.modificacion()
-
+                mision = lista_mision[int(opcion)-1]
+                mision.modificacion(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_naves)
+            else:
+                print("Debe crear al menos una mision")
         #visualizar mision - recorre la lista y muestra cada elemento
         elif opcion == 2:
             print("Lista de misiones")
