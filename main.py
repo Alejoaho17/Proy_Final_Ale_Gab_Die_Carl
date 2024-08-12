@@ -22,7 +22,7 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
-    '''page = "https://www.swapi.tech/api/people"
+    page = "https://www.swapi.tech/api/people"
 
     # Mientras haya una página siguiente, seguir obteniendo personajes
     while page:
@@ -102,7 +102,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             lista_planetas.append(nuevo_planeta)
             
         # Actualizar la URL de la siguiente página
-        page = data["next"]'''
+        page = data["next"]
     
     
 #Main
@@ -311,7 +311,7 @@ def mostrar_estadistica(dicc_hiperimpulsor, dicc_MGLT, dicc_velocidad, dicc_cost
     print(f"{dicc_velocidad['titulo']:<20} | {dicc_velocidad['promedio']:<20} | {dicc_velocidad['moda']:<20} | {dicc_velocidad['max']:<20} | {dicc_velocidad['min']:<20}")
     print(f"{dicc_costo['titulo']:<20} | {dicc_costo['promedio']:<20} | {dicc_costo['moda']:<20} | {dicc_costo['max']:<20} | {dicc_costo['min']:<20}")
 
-
+#calcula las estadisticas de los 4 diccionarios
 def calculos_estadistica(dicc, lista, posicion):
     promedio = calcular_promedio(lista, posicion)
     moda = calcular_moda(lista, posicion)
@@ -322,7 +322,7 @@ def calculos_estadistica(dicc, lista, posicion):
     dicc["max"] = max_d
     dicc["min"] = min_d
 
-
+#Calcula el promedio de cada dicc
 def calcular_promedio(lista, posicion):
     suma = 0
     
@@ -335,7 +335,7 @@ def calcular_promedio(lista, posicion):
     # Calculamos el promedio dividiendo la suma por el número de elementos
     return suma / len(lista)
 
-
+#Calcula el moda de cada dicc
 def calcular_moda(lista, posicion):
     valores = []
     
@@ -362,7 +362,7 @@ def calcular_moda(lista, posicion):
     
     return moda
 
-
+#Calcula el max y min de cada dicc
 def calcular_maximo_minimo(lista, posicion):
         # Inicializamos los valores de máximo y mínimo
         maximo = lista[0][posicion]
