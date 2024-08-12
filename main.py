@@ -250,6 +250,66 @@ def grafico_naves():
 #funcion para mostrar estadistica sobre naves
 def estadisticas():
     pass
+    [
+        ["qdw", 4]
+        ["dw", 24]
+        ["ddw", 45]
+        ["qdsw", 5]
+    ]
+
+
+def calcular_promedio(lista):
+    suma = 0
+    
+    # Recorremos cada sublista en la lista principal
+    for item in lista:
+        suma += item[1]
+    
+    # Calculamos el promedio dividiendo la suma por el número de elementos
+    return suma / len(lista)
+
+
+def calcular_moda(lista):
+    valores = []
+    
+    # Recorremos cada sublista en la lista principal
+    for item in lista:
+        valores.append(item[1])
+    
+    frecuencia = {}
+    # Recorremos la lista 'valores' para contar las repeticiones de cada valor
+    # Si el valor ya está en el diccionario, incrementamos su cuenta si no lo añadimos con una cuenta inicial de 1
+    for valor in valores:
+        if valor in frecuencia:
+            frecuencia[valor] += 1
+        else:
+            frecuencia[valor] = 1
+    
+    moda = None
+    max_frecuencia = 0
+    # Recorremos el diccionario de frecuencias para encontrar el valor con mayor frecuencia
+    for key, value in frecuencia.items():
+        if value > max_frecuencia:
+            max_frecuencia = value
+            moda = key
+    
+    return moda
+
+
+def calcular_maximo_minimo(lista):
+    # Inicializamos los valores de máximo y mínimo
+    maximo = lista[0][1]
+    minimo = lista[0][1]
+    
+    # Recorremos la lista para encontrar el máximo y mínimo
+    for item in lista:
+        valor = item[1]
+        if valor > maximo:
+            maximo = valor
+        if valor < minimo:
+            minimo = valor
+    
+    return maximo, minimo
 
 #Funcion para crear, modificar y visualizar una mision     
 def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
