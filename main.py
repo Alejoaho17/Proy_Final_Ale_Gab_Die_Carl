@@ -6,6 +6,7 @@ from Vehiculo import Vehiculo
 from Pelicula import Pelicula
 import requests
 import json
+import csv
 
 #funcion de menu, desde una lista muestra como menu las opciones con su validacion
 def menu(opciones):
@@ -132,26 +133,30 @@ def main():
             break
 
 #Funcion para mostrar las distintas listas - peliculas, especies, planetas
+#Recorre la lista de peliculas, especies y planetas y las imprime y las enumera
 def listas(lista_peliculas, lista_especies, lista_planetas):
     while True:
         opciones = ["Lista de Películas de la saga", "Lista de las especies de seres vivos de la saga", "Lista de planetas", "Salir"]
         opcion = menu(opciones)
 
-        
+        #Lista de Películas de la saga
         if opcion == 0:
             for i, pelicula in enumerate(lista_peliculas):
                 print(i+1)
                 print(pelicula.__str__())
 
+        #Lista de las especies de seres vivos de la saga
         elif opcion == 1:
             for i, especie in enumerate(lista_especies):
                 print(i+1)
                 print(especie.__str__())
-
+        
+        #Lista de planetas
         elif opcion == 2:
             for i, planeta in enumerate(lista_planetas):
                 print(i+1)
                 print(planeta.__str__())
+        
         elif opcion == 3:
             break
 
@@ -159,6 +164,7 @@ def listas(lista_peliculas, lista_especies, lista_planetas):
 def buscar(personajes):
     busqueda = input("Ingrese el nombre del personaje que desea buscar: ")
     
+    #Recorre la lista de personajes, si el nombre del objecto contiene el string que se busca muestra el objecto
     contador = 1
     for i in personajes:
         if busqueda.upper() in i.nombre.upper():
@@ -175,11 +181,43 @@ def graficos():
 
         
         if opcion == 0:
-            pass
+            grafico_personajes()
         elif opcion == 1:
             pass
         elif opcion == 2:
             break
+
+
+def grafico_personajes():
+    planetas = []
+    planetas_personajes = []
+    # Abre el archivo CSV
+    with open('starwars/csv/planets.csv','r') as file:
+        # Crea un lector de CSV
+        reader = csv.reader(file)
+        
+        # Recorre cada fila en el archivo CSV
+        for row in reader:
+            if row[0] != "id":
+                planetas.append([row[1], 0])
+    
+    with open('starwars/csv/characters.csv','r') as file:
+        # Crea un lector de CSV
+        reader = csv.reader(file)
+        
+        # Recorre cada fila en el archivo CSV
+        for row in reader:
+            if row[0] != "id":
+                planetas_personajes.append(row[10])
+
+        
+    for planeta in planetas:
+        for p in planetas_personajes:
+            if planeta[0].upper() == p.upper():
+                planeta[1] += 1
+
+    print(planetas)
+
 
 #funcion para mostrar estadistica sobre naves
 def estadisticas():
@@ -266,27 +304,8 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
             while not opcion.isnumeric() or not int(opcion) in range(1, len(lista_mision)+1):
                 opcion = input("Error, ingrese el numero de la mision que desea elegir: ")
 
-            opcion = int(opcion)-1
-            mision = opcion
-
-            print("Que deseas modificar?")
-            opciones = ["Nombre de la mision", "planeta de la mision", "nave de la mision", "armas para la mision", "Integrantes de la mision"]
-            opcion = menu(opciones)
-
-            nuevo_valor = input("Ingrese el nuevo valor: ")
-
-            if opcion == 0:
-                mision.nombre_mision = nuevo_valor
-            elif opcion == 1:
-                mision.planeta_destino = nuevo_valor
-            elif opcion == 2:
-                mision.nave = nuevo_valor
-            elif opcion == 3:
-                mision.armas = nuevo_valor
-            elif opcion == 4:
-                mision.integrantes = nuevo_valor
-            
-            print("Cambio con exito")
+            mision = int(opcion)-1
+            mision.modificacion()
 
         #visualizar mision - recorre la lista y muestra cada elemento
         elif opcion == 2:
@@ -295,6 +314,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
                 print(i+1)
                 print(mision.__str__())
 
+        #Salir
         elif opcion == 3:
             break
 
