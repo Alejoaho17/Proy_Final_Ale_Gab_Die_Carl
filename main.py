@@ -22,7 +22,7 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
-    page = "https://www.swapi.tech/api/people"
+    '''page = "https://www.swapi.tech/api/people"
 
     # Mientras haya una página siguiente, seguir obteniendo personajes
     while page:
@@ -102,7 +102,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             lista_planetas.append(nuevo_planeta)
             
         # Actualizar la URL de la siguiente página
-        page = data["next"]
+        page = data["next"]'''
     
     
 #Main
@@ -183,7 +183,7 @@ def graficos():
         if opcion == 0:
             grafico_personajes()
         elif opcion == 1:
-            pass
+            grafico_naves()
         elif opcion == 2:
             break
 
@@ -218,6 +218,34 @@ def grafico_personajes():
 
     print(planetas)
 
+
+def grafico_naves():
+    naves = []
+    with open('starwars/csv/starships.csv','r') as file:
+        # Crea un lector de CSV
+        reader = csv.reader(file)
+        
+        # Recorre cada fila en el archivo CSV
+        for row in reader:
+            if row[0] != "id":
+                naves.append([row[1], row[5], row[9], row[11], row[12]])
+
+    print(naves)
+    while True:
+        print("Seleccione la categoria que desea ver en la grafica de las naves: ")
+        opciones = ["Longitud de la nave", "Capacidad de carga", "Clasificación de hiperimpulsor", "MGLT (Modern Galactic Light Time)", "salir"]
+        opcion = menu(opciones)
+            
+        if opcion == 0:
+            pass
+        elif opcion == 1:
+            pass
+        elif opcion == 2:
+            pass
+        elif opcion == 3:
+            pass
+        elif opcion == 3:
+            break
 
 #funcion para mostrar estadistica sobre naves
 def estadisticas():
