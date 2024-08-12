@@ -22,8 +22,8 @@ def menu(opciones):
 
     return opcion
 #obtener info de api
-def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves):
-     
+def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves, lista_mision):
+    ''' 
 
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
@@ -155,15 +155,27 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         
     
     with open('starwars/csv/weapons.csv','r') as file:
-        
         reader = csv.reader(file)
         
         for row in reader:
             if row[0] != "id":
                 nueva_arma = Arma(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
                 lista_armas.append([row[1], 0])  
-    
-    
+    '''
+    with open('misiones.txt','r') as file:
+        informacion = file.readlines()
+        for info in informacion:
+            info = info.split("///")
+            info.remove(info[-1])
+
+            #print(info)
+            nueva_mision = Mision(info[0], info[1], info[2], [], [])
+            nueva_mision.armas.append(info[3])
+            nueva_mision.integrantes.append(info[4])
+
+            lista_mision.append(nueva_mision)
+
+
     
 #Main
 def main():
@@ -175,7 +187,7 @@ def main():
     lista_armas = []
     lista_naves = []
 
-    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves)
+    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves,lista_mision)
     
     while True:
         opciones = ["Ver listas", "Buscar personaje", "Graficos", "Estadisticas", "Mision", "Salir"]

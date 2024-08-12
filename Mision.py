@@ -11,7 +11,7 @@ class Mision:
                f"Planeta Destino: {self.planeta_destino}\n" \
                f"Nave a Utilizar: {self.nave}\n" \
                f"Armas a Utilizar: {', '.join(self.armas)}\n" \
-               f"Integrantes de la Misión: {', '.join(self.integrantes)}"
+               f"Integrantes de la Misión: {', '.join(self.integrantes)}\n"
 
     #edicion de la mision - se escoge la mision, luego lo que deseas editar, para preceder a guardar la nueva info
     def modificacion(self, lista_planetas, lista_mision, lista_personajes, lista_armas, lista_naves):
