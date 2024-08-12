@@ -23,7 +23,6 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves, lista_mision):
-    ''' 
 
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
@@ -39,7 +38,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         id = pelicula["uid"]
         pelicula = pelicula["properties"]
         # Puedes crear una instancia de una clase Pelicula si tienes una clase definida
-        nuevo_pelicula = Pelicula(id, pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"], pelicula["species"], pelicula["characters"])
+        nuevo_pelicula = Pelicula(id, pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"], pelicula["species"], pelicula["characters"], pelicula["planets"])
         lista_peliculas.append(nuevo_pelicula)
     
 
@@ -72,31 +71,6 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
         page = data["next"]
     
     
-    page = "https://www.swapi.tech/api/planets"
-
-    # Mientras haya una página siguiente, seguir obteniendo personajes
-    while page:
-        response = requests.get(page)
-        data = response.json()
-        results = data['results']
-
-        # Iterar sobre cada personaje y obtener su información detallada
-        for planeta in results:
-            planeta_url = planeta["url"]
-            
-            planeta = requests.get(planeta_url).json()
-            id = planeta["result"]["uid"]
-            planeta = planeta["result"]["properties"]
-            #print(planeta)  
-            # Imprimir la información del personaje
-            nuevo_planeta = Planeta(id, planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
-            for personaje in lista_personajes:
-                if personaje.nombre_planeta_origen == nuevo_planeta.nombre:
-                    nuevo_planeta.personajes.append(personaje.nombre)
-            lista_planetas.append(nuevo_planeta)
-            
-        # Actualizar la URL de la siguiente página
-        page = data["next"]
     
     page = "https://www.swapi.tech/api/starships"
 
@@ -120,7 +94,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-        
+       
     page = "https://www.swapi.tech/api/people"
 
     # Mientras haya una página siguiente, seguir obteniendo personajes
@@ -138,6 +112,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             #print(character)  
             # Imprimir la información del personaje
             nuevo_personaje = Personaje(id, character["name"], character["homeworld"], [], character['gender'], "", [], [])
+            #print(nuevo_personaje.__str__())
             for pelicula in lista_peliculas:
                 for url in pelicula.personajes:
                     if url.split('/')[-1] == id:
@@ -152,7 +127,47 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-        
+
+    #print(lista_personajes)
+    page = "https://www.swapi.tech/api/planets"
+
+    # Mientras haya una página siguiente, seguir obteniendo personajes
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada personaje y obtener su información detallada
+        for planeta in results:
+            planeta_url = planeta["url"]
+            
+            planeta = requests.get(planeta_url).json()
+            id = planeta["result"]["uid"]
+            planeta = planeta["result"]["properties"]
+            #print(planeta)  
+            # Imprimir la información del personaje
+            nuevo_planeta = Planeta(id, planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
+            
+            for personaje in lista_personajes:
+                if personaje.nombre_planeta_origen.split('/')[-1] == id:
+                    nuevo_planeta.personajes.append(personaje.nombre)
+                    #print(personaje.nombre)
+            
+            #print(nuevo_planeta.personajes)
+            
+            for pelicula in lista_peliculas:
+                for url in pelicula.planetas:
+                    
+                    if (url.split('/')[-1] == id):
+                        (nuevo_planeta.episodios).append(pelicula.titulo)
+
+            #print(nuevo_planeta.episodios) 
+
+            lista_planetas.append(nuevo_planeta)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
+     
     
     with open('starwars/csv/weapons.csv','r') as file:
         reader = csv.reader(file)
@@ -161,7 +176,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             if row[0] != "id":
                 nueva_arma = Arma(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
                 lista_armas.append([row[1], 0])  
-    '''
+    
     with open('misiones.txt','r') as file:
         informacion = file.readlines()
         for info in informacion:
@@ -175,7 +190,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
 
             lista_mision.append(nueva_mision)
 
-
+    
     
 #Main
 def main():
@@ -245,7 +260,7 @@ def buscar(personajes):
     for i in personajes:
         if busqueda.upper() in i.nombre.upper():
             print("")
-            print('----'+contador+'----')
+            print('----'+ str(contador) +'----')
             print(i.__str__())
             contador = contador + 1
 
