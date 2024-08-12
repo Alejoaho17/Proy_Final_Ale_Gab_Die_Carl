@@ -257,8 +257,16 @@ def estadisticas():
         # Recorre cada fila en el archivo CSV
         for row in reader:
             if row[0] != "id":
-                naves.append([row[11], row[12], row[6], row[4]])
+                lista = [row[11], row[12], row[6], row[4]]
+                for i in range(len(lista)):
+                    if lista[i]:
+                        lista[i] = float(lista[i])
+                    else:
+                        lista[i] = 0
+                naves.append(lista)
 
+
+    #print(naves)
     dicc_hiperimpulsor = {
         'titulo': 'Hiperimpulsor',
         'promedio': 0,
@@ -274,7 +282,7 @@ def estadisticas():
         'min': 0
     }
     dicc_velocidad = {
-        'titulo': 'velocidad máxima en atmósfera',
+        'titulo': 'velocidad máxima',
         'promedio': 0,
         'moda': 0,
         'max': 0,
@@ -292,7 +300,16 @@ def estadisticas():
     calculos_estadistica(dicc_MGLT, naves, 1)
     calculos_estadistica(dicc_velocidad, naves, 2)
     calculos_estadistica(dicc_costo, naves, 3)
-    
+
+    mostrar_estadistica(dicc_hiperimpulsor, dicc_MGLT, dicc_velocidad, dicc_costo)
+
+#Muestra la tabla de estadistica
+def mostrar_estadistica(dicc_hiperimpulsor, dicc_MGLT, dicc_velocidad, dicc_costo):
+    print(f"{'Nombre':<20} | {'Promedio':<20} | {'Moda':<20} | {'Maximo':<20} | {'Minimo':<20}")
+    print(f"{dicc_hiperimpulsor['titulo']:<20} | {dicc_hiperimpulsor['promedio']:<20} | {dicc_hiperimpulsor['moda']:<20} | {dicc_hiperimpulsor['max']:<20} | {dicc_hiperimpulsor['min']:<20}")
+    print(f"{dicc_MGLT['titulo']:<20} | {dicc_MGLT['promedio']:<20} | {dicc_MGLT['moda']:<20} | {dicc_MGLT['max']:<20} | {dicc_MGLT['min']:<20}")
+    print(f"{dicc_velocidad['titulo']:<20} | {dicc_velocidad['promedio']:<20} | {dicc_velocidad['moda']:<20} | {dicc_velocidad['max']:<20} | {dicc_velocidad['min']:<20}")
+    print(f"{dicc_costo['titulo']:<20} | {dicc_costo['promedio']:<20} | {dicc_costo['moda']:<20} | {dicc_costo['max']:<20} | {dicc_costo['min']:<20}")
 
 
 def calculos_estadistica(dicc, lista, posicion):
@@ -306,13 +323,14 @@ def calculos_estadistica(dicc, lista, posicion):
     dicc["min"] = min_d
 
 
-
 def calcular_promedio(lista, posicion):
     suma = 0
     
     # Recorremos cada sublista en la lista principal
     for item in lista:
-        suma += item[posicion]
+        n = item[posicion]
+        #print(n)
+        suma += float(n)
     
     # Calculamos el promedio dividiendo la suma por el número de elementos
     return suma / len(lista)
@@ -345,7 +363,7 @@ def calcular_moda(lista, posicion):
     return moda
 
 
-    def calcular_maximo_minimo(lista, posicion):
+def calcular_maximo_minimo(lista, posicion):
         # Inicializamos los valores de máximo y mínimo
         maximo = lista[0][posicion]
         minimo = lista[0][posicion]
