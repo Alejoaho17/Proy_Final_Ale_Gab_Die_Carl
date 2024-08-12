@@ -4,6 +4,7 @@ from Personaje import Personaje
 from Planeta import Planeta
 from Vehiculo import Vehiculo
 from Pelicula import Pelicula
+from Arma import Arma
 import requests
 import json
 import csv
@@ -21,7 +22,7 @@ def menu(opciones):
 
     return opcion
 #obtener info de api
-def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
+def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas):
     ''' 
 
     # URL del endpoint de películas
@@ -122,8 +123,15 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         # Actualizar la URL de la siguiente página
         page = data["next"]
         
+    with open('starwars/csv/weapons.csv','r') as file:
         
-        '''
+        reader = csv.reader(file)
+        
+        for row in reader:
+            if row[0] != "id":
+                nueva_arma = Armas(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+                planetas.append([row[1], 0])  
+    '''
     
     
 #Main
@@ -133,7 +141,8 @@ def main():
     lista_planetas = []
     lista_personajes = []
     lista_mision = []
-    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes)
+    lista_armas = []
+    api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas)
 
     while True:
         opciones = ["Ver listas", "Buscar personaje", "Graficos", "Estadisticas", "Mision", "Salir"]
@@ -148,7 +157,7 @@ def main():
         elif opcion == 3:
             estadisticas()
         elif opcion == 4:
-            mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes)
+            mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes, lista_armas)
         elif opcion == 5:
             print("Hasta luego")
             break
@@ -401,7 +410,8 @@ def calcular_maximo_minimo(lista, posicion):
         return maximo, minimo
 
 #Funcion para crear, modificar y visualizar una mision     
-def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes):
+def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes, lista_armas):
+
     while True:
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
         opcion = menu(opciones)
