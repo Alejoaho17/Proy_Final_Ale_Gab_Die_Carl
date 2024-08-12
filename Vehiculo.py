@@ -1,5 +1,6 @@
 class Vehiculo:
-    def __init__(self, nombre, modelo, clase_vehiculo, fabricante, costo_en_creditos, longitud, tripulacion, pasajeros, velocidad_maxima_atmosferica, capacidad_carga, consumibles, peliculas, pilotos):
+    def __init__(self, id, nombre, modelo, clase_vehiculo, fabricante, costo_en_creditos, longitud, tripulacion, pasajeros, velocidad_maxima_atmosferica, capacidad_carga, consumibles, peliculas, pilotos):
+        self.id = id
         self.nombre = nombre
         self.modelo = modelo
         self.clase_vehiculo = clase_vehiculo

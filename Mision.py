@@ -88,3 +88,7 @@ class Mision:
             self.integrantes = mision_integrantes
         
         print("Cambio con exito")
+
+
+    def convertir_str(self):
+        return f"{self.nombre_mision}///{self.planeta_destino}///{self.nave}///{', '.join(self.armas)}///{', '.join(self.integrantes)}///\n"

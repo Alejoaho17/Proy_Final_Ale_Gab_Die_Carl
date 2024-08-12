@@ -1,10 +1,13 @@
 class Pelicula:
-    def __init__(self, titulo, numero_episodio, fecha_lanzamiento, opening_crawl, nombre_director):
+    def __init__(self, id, titulo, numero_episodio, fecha_lanzamiento, opening_crawl, nombre_director, especies, personajes):
+        self.id = id
         self.titulo = titulo
         self.numero_episodio = numero_episodio
         self.fecha_lanzamiento = fecha_lanzamiento
         self.opening_crawl = opening_crawl
         self.nombre_director = nombre_director
+        self.espacies = especies
+        self.personajes = personajes
 
     def __str__(self):
         return f"Titulo: {self.titulo}\n" \

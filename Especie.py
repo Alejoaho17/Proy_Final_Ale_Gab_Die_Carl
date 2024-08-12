@@ -1,5 +1,6 @@
 class Especie:
-    def __init__(self, nombre, altura, clasificacion, nombre_planeta, lengua_materna, personajes_pertenecen, episodios):
+    def __init__(self, id, nombre, altura, clasificacion, nombre_planeta, lengua_materna, personajes_pertenecen, episodios):
+        self.id = id
         self.nombre = nombre
         self.altura = altura
         self.clasificacion = clasificacion

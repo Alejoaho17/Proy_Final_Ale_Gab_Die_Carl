@@ -22,28 +22,7 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
-    '''page = "https://www.swapi.tech/api/people"
-
-    # Mientras haya una página siguiente, seguir obteniendo personajes
-    while page:
-        response = requests.get(page)
-        data = response.json()
-        results = data['results']
-
-        # Iterar sobre cada personaje y obtener su información detallada
-        for character in results:
-            character_url = character["url"]
-            character = requests.get(character_url).json()["result"]["properties"]
-            #print(character)  
-            # Imprimir la información del personaje
-            nuevo_personaje = Personaje(character["name"], character["homeworld"], [], character['gender'], "", [], [])
-            lista_personajes.append(nuevo_personaje)
-            
-        # Actualizar la URL de la siguiente página
-        page = data["next"]
-    
-    
-
+    ''' 
 
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
@@ -58,7 +37,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
         #print(pelicula)
         pelicula = pelicula["properties"]
         # Puedes crear una instancia de una clase Pelicula si tienes una clase definida
-        nuevo_pelicula = Pelicula(pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"])
+        nuevo_pelicula = Pelicula(pelicula["uid"], pelicula["title"], pelicula["episode_id"], pelicula["release_date"], pelicula["opening_crawl"],  pelicula["director"], pelicula["species"], pelicula["characters"])
         lista_peliculas.append(nuevo_pelicula)
     
 
@@ -77,7 +56,12 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             especie = requests.get(especie_url).json()["result"]["properties"]
             #print(especie)  
             # Imprimir la información del personaje
-            nuevo_especie = Especie(especie["name"], especie["homeworld"], especie["classification"], especie['homeworld'], especie["language"], especie["people"], [])
+            nuevo_especie = Especie(especie["uid"], especie["name"], especie["homeworld"], especie["classification"], especie['homeworld'], especie["language"], especie["people"], [])
+            for pelicula in lista_peliculas:
+                for url in pelicula.especies:
+                    if url.split('/')[-1] == especie["uid"]:
+                        nuevo_especie.episodios.append(titulo)
+            
             lista_especies.append(nuevo_especie)
             
         # Actualizar la URL de la siguiente página
@@ -98,11 +82,48 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes):
             planeta = requests.get(planeta_url).json()["result"]["properties"]
             #print(planeta)  
             # Imprimir la información del personaje
-            nuevo_planeta = Planeta(planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
+            nuevo_planeta = Planeta(planeta["uid"], planeta["name"], planeta["orbital_period"], planeta["rotation_period"], planeta["population"], planeta["climate"], [], [])
+            for personaje in lista_personajes:
+                if personaje.nombre_planeta_origen == nuevo_planeta.nombre:
+                    nuevo_planeta.personajes.append(personaje.nombre)
             lista_planetas.append(nuevo_planeta)
             
         # Actualizar la URL de la siguiente página
-        page = data["next"]'''
+        page = data["next"]
+        
+        
+    page = "https://www.swapi.tech/api/people"
+
+    # Mientras haya una página siguiente, seguir obteniendo personajes
+    while page:
+        response = requests.get(page)
+        data = response.json()
+        results = data['results']
+
+        # Iterar sobre cada personaje y obtener su información detallada
+        for character in results:
+            character_url = character["url"]
+            character = requests.get(character_url).json()["result"]["properties"]
+            #print(character)  
+            # Imprimir la información del personaje
+            nuevo_personaje = Personaje(character["uid"], character["name"], character["homeworld"], [], character['gender'], "", [], [])
+            for pelicula in lista_peliculas:
+                for url in pelicula.personajes:
+                    if url.split('/')[-1] == character["uid"]:
+                        nuevo_personaje.episodios.append(titulo)
+
+            for especie in lista_especies:
+                for url in especie.personajes_pertenecen:
+                    if url.split('/')[-1] == character["uid"]:
+                        nuevo_personaje.especie = nombre
+            
+            lista_personajes.append(nuevo_personaje)
+            
+        # Actualizar la URL de la siguiente página
+        page = data["next"]
+        
+        
+        '''
     
     
 #Main
@@ -127,7 +148,7 @@ def main():
         elif opcion == 3:
             estadisticas()
         elif opcion == 4:
-            mision(lista_peliculas, lista_especies, lista_planetas, lista_mision)
+            mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes)
         elif opcion == 5:
             print("Hasta luego")
             break
@@ -229,6 +250,7 @@ def grafico_naves():
         for row in reader:
             if row[0] != "id":
                 naves.append([row[1], row[5], row[9], row[11], row[12]])
+                
 
     print(naves)
     while True:
@@ -257,8 +279,16 @@ def estadisticas():
         # Recorre cada fila en el archivo CSV
         for row in reader:
             if row[0] != "id":
-                naves.append([row[11], row[12], row[6], row[4]])
+                lista = [row[11], row[12], row[6], row[4]]
+                for i in range(len(lista)):
+                    if lista[i]:
+                        lista[i] = float(lista[i])
+                    else:
+                        lista[i] = 0
+                naves.append(lista)
 
+
+    #print(naves)
     dicc_hiperimpulsor = {
         'titulo': 'Hiperimpulsor',
         'promedio': 0,
@@ -274,7 +304,7 @@ def estadisticas():
         'min': 0
     }
     dicc_velocidad = {
-        'titulo': 'velocidad máxima en atmósfera',
+        'titulo': 'velocidad máxima',
         'promedio': 0,
         'moda': 0,
         'max': 0,
@@ -292,9 +322,18 @@ def estadisticas():
     calculos_estadistica(dicc_MGLT, naves, 1)
     calculos_estadistica(dicc_velocidad, naves, 2)
     calculos_estadistica(dicc_costo, naves, 3)
-    
 
+    mostrar_estadistica(dicc_hiperimpulsor, dicc_MGLT, dicc_velocidad, dicc_costo)
 
+#Muestra la tabla de estadistica
+def mostrar_estadistica(dicc_hiperimpulsor, dicc_MGLT, dicc_velocidad, dicc_costo):
+    print(f"{'Nombre':<20} | {'Promedio':<20} | {'Moda':<20} | {'Maximo':<20} | {'Minimo':<20}")
+    print(f"{dicc_hiperimpulsor['titulo']:<20} | {dicc_hiperimpulsor['promedio']:<20} | {dicc_hiperimpulsor['moda']:<20} | {dicc_hiperimpulsor['max']:<20} | {dicc_hiperimpulsor['min']:<20}")
+    print(f"{dicc_MGLT['titulo']:<20} | {dicc_MGLT['promedio']:<20} | {dicc_MGLT['moda']:<20} | {dicc_MGLT['max']:<20} | {dicc_MGLT['min']:<20}")
+    print(f"{dicc_velocidad['titulo']:<20} | {dicc_velocidad['promedio']:<20} | {dicc_velocidad['moda']:<20} | {dicc_velocidad['max']:<20} | {dicc_velocidad['min']:<20}")
+    print(f"{dicc_costo['titulo']:<20} | {dicc_costo['promedio']:<20} | {dicc_costo['moda']:<20} | {dicc_costo['max']:<20} | {dicc_costo['min']:<20}")
+
+#calcula las estadisticas de los 4 diccionarios
 def calculos_estadistica(dicc, lista, posicion):
     promedio = calcular_promedio(lista, posicion)
     moda = calcular_moda(lista, posicion)
@@ -305,19 +344,20 @@ def calculos_estadistica(dicc, lista, posicion):
     dicc["max"] = max_d
     dicc["min"] = min_d
 
-
-
+#Calcula el promedio de cada dicc
 def calcular_promedio(lista, posicion):
     suma = 0
     
     # Recorremos cada sublista en la lista principal
     for item in lista:
-        suma += item[posicion]
+        n = item[posicion]
+        #print(n)
+        suma += float(n)
     
     # Calculamos el promedio dividiendo la suma por el número de elementos
     return suma / len(lista)
 
-
+#Calcula el moda de cada dicc
 def calcular_moda(lista, posicion):
     valores = []
     
@@ -344,8 +384,8 @@ def calcular_moda(lista, posicion):
     
     return moda
 
-
-    def calcular_maximo_minimo(lista, posicion):
+#Calcula el max y min de cada dicc
+def calcular_maximo_minimo(lista, posicion):
         # Inicializamos los valores de máximo y mínimo
         maximo = lista[0][posicion]
         minimo = lista[0][posicion]
@@ -361,7 +401,7 @@ def calcular_moda(lista, posicion):
         return maximo, minimo
 
 #Funcion para crear, modificar y visualizar una mision     
-def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
+def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision, lista_personajes):
     while True:
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
         opcion = menu(opciones)
@@ -413,7 +453,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
 
             mision_integrantes = []
             while len(mision_integrantes) <= maximo:
-                for i, integrante in enumerate(lista_integrantes):
+                for i, integrante in enumerate(lista_personajes):
                     print(i+1, integrante.nombre)
                 mision_integrante = input("Ingresa el numero del integrante que desea: ")
                 cantidad_integrantes = len(lista_integrantes)
@@ -447,7 +487,7 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
         #visualizar mision - recorre la lista y muestra cada elemento
         elif opcion == 2:
             print("Lista de misiones")
-            for i, mision in enumerate(lista_misiones):
+            for i, mision in enumerate(lista_mision):
                 print(i+1)
                 print(mision.__str__())
 
@@ -455,6 +495,13 @@ def mision(lista_peliculas, lista_especies, lista_planetas, lista_mision):
         elif opcion == 3:
             break
 
+def guardar_mision(lista_mision):
+    str_misiones = ""
+    for mision in range(0, len(lista_mision)):
+        str_misiones = str_misiones + lista_mision[mision].convertir_str()
+
+    with open('misiones.txt', 'w') as a:
+        a.write(str_misiones)
     
     
 main()
