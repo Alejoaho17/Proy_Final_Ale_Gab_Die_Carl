@@ -6,6 +6,8 @@ from Nave import Nave
 from Pelicula import Pelicula
 from Arma import Arma
 from Vehiculo import Vehiculo
+
+import matplotlib.pyplot as plt
 import requests
 import json
 import csv
@@ -24,7 +26,7 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves,lista_mision,lista_vehiculos):
-
+    '''
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
 
@@ -205,7 +207,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-     
+    '''
     
     with open('starwars/csv/weapons.csv','r') as file:
         reader = csv.reader(file)
@@ -346,7 +348,21 @@ def grafico_personajes():
             if planeta[0].upper() == p.upper():
                 planeta[1] += 1
 
-    print(planetas)
+    #print(planetas)
+
+    listado_planeta = []
+    listado_numero = []
+
+    for planeta in planetas:
+        listado_planeta.append(planeta[0])
+        listado_numero.append(planeta[1])
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(listado_planeta, listado_numero)
+    plt.title('Gráfico de numero de nacidos en cada planeta')
+    plt.xlabel('Planetas')
+    plt.ylabel('Numero de nacidos')
+    plt.show()
 
 
 def grafico_naves():
