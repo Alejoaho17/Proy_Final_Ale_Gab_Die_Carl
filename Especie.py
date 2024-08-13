@@ -1,5 +1,6 @@
 class Especie:
-    def __init__(self, nombre, altura, clasificacion, nombre_planeta, lengua_materna, personajes_pertenecen, episodios):
+    def __init__(self, id, nombre, altura, clasificacion, nombre_planeta, lengua_materna, personajes_pertenecen, episodios):
+        self.id = id
         self.nombre = nombre
         self.altura = altura
         self.clasificacion = clasificacion
@@ -15,5 +16,5 @@ class Especie:
                f"Planeta: {self.nombre_planeta}\n" \
                f"Lengua Materna: {self.lengua_materna}\n" \
                f"Personajes que Pertenecen: {', '.join(self.personajes_pertenecen)}\n" \
-               f"Episodios: {', '.join(self.episodios)}"
+               f"Episodios: {', '.join(self.episodios)}\n"
 

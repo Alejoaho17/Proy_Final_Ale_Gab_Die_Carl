@@ -1,5 +1,6 @@
 class Personaje:
-    def __init__(self, nombre, nombre_planeta_origen, episodios, genero, especie, naves, vehiculos):
+    def __init__(self, id, nombre, nombre_planeta_origen, episodios, genero, especie, naves, vehiculos):
+        self.id = id
         self.nombre = nombre
         self.nombre_planeta_origen = nombre_planeta_origen
         self.episodios = episodios
