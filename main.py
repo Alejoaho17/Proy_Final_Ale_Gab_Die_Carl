@@ -26,7 +26,7 @@ def menu(opciones):
     return opcion
 #obtener info de api
 def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista_armas, lista_naves,lista_mision,lista_vehiculos):
-    '''
+    
     # URL del endpoint de películas
     url = "https://www.swapi.tech/api/films"
 
@@ -207,7 +207,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             
         # Actualizar la URL de la siguiente página
         page = data["next"]
-    '''
+    
     
     with open('starwars/csv/weapons.csv','r') as file:
         reader = csv.reader(file)
@@ -377,21 +377,59 @@ def grafico_naves():
                 naves.append([row[1], row[5], row[9], row[11], row[12]])
                 
 
-    print(naves)
+    #print(naves)
     while True:
         print("Seleccione la categoria que desea ver en la grafica de las naves: ")
         opciones = ["Longitud de la nave", "Capacidad de carga", "Clasificación de hiperimpulsor", "MGLT (Modern Galactic Light Time)", "salir"]
         opcion = menu(opciones)
+
+        listado_naves = []
+        logitudes = []
+        capacidad = []
+        hiperimpulsor = []
+        mglt = []
+
+        fig, ax = plt.subplots(figsize=(22, 8.5))  # Tamaño de la figur
+        # Configurar la ventana para comenzar en la esquina superior izquierda y luego pantalla completa
+        mng = plt.get_current_fig_manager()
+        mng.window.wm_geometry("+0+0")  # Mover la ventana a la esquina superior izquierda
+        plt.subplots_adjust(left=0.069, bottom=0.286, right=0.998, top=0.964, wspace=0.198, hspace=0.202)
+        plt.xticks(rotation=90, fontsize=10)
+
+
+        for nave in naves:
+            listado_naves.append(nave[0])
+            logitudes.append(nave[1])
+            capacidad.append(nave[2])
+            hiperimpulsor.append(nave[3])
+            mglt.append(nave[4])
             
         if opcion == 0:
-            pass
+            plt.bar(listado_naves, logitudes)
+            plt.title('Longitud de la nave')
+            plt.xlabel('Naves')
+            plt.ylabel('Longitud de la nave')
+            plt.show()
+            
         elif opcion == 1:
-            pass
+            plt.bar(listado_naves, capacidad)
+            plt.title('Gráfico de Capacidad de carga')
+            plt.xlabel('Naves')
+            plt.ylabel('Capacidad de carga')
+            plt.show()
         elif opcion == 2:
-            pass
+            plt.bar(listado_naves, hiperimpulsor)
+            plt.title('Gráfico de Clasificación de hiperimpulsor')
+            plt.xlabel('Naves')
+            plt.ylabel('Clasificación de hiperimpulsor')
+            plt.show()
         elif opcion == 3:
-            pass
-        elif opcion == 3:
+            plt.bar(listado_naves, mglt)
+            plt.title('Gráfico de MGLT (Modern Galactic Light Time)')
+            plt.xlabel('Naves')
+            plt.ylabel('MGLT (Modern Galactic Light Time)')
+            plt.show()
+        elif opcion == 4:
             break
 
 #funcion para mostrar estadistica sobre naves
