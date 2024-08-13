@@ -1,3 +1,4 @@
+#Importaciones de todas las clases
 from Especie import Especie
 from Mision import Mision
 from Personaje import Personaje
@@ -6,12 +7,13 @@ from Nave import Nave
 from Pelicula import Pelicula
 from Arma import Arma
 from Vehiculo import Vehiculo
-
+#Importaciones de todas las librerias necesarias
 import matplotlib.pyplot as plt
 import requests
 import json
 import csv
 
+#Cumplimiento con la parte L del archivo(al final de la funcion se encuentra)
 #funcion de menu, desde una lista muestra como menu las opciones con su validacion
 def menu(opciones):
     for i, opcion in enumerate(opciones):
@@ -216,7 +218,7 @@ def api(lista_peliculas, lista_especies, lista_planetas, lista_personajes, lista
             if row[0] != "id":
                 nueva_arma = Arma(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
                 lista_armas.append([row[1], 0])  
-    
+#Cumplimiento con la parte L del archivo
     with open('misiones.txt','r') as file:
         informacion = file.readlines()
         for info in informacion:
@@ -263,7 +265,7 @@ def main():
             guardar_mision(lista_mision)
             print("Hasta luego")
             break
-
+#Cumple con las partes A,B y C  
 #Funcion para mostrar las distintas listas - peliculas, especies, planetas
 #Recorre la lista de peliculas, especies y planetas y las imprime y las enumera
 def listas(lista_peliculas, lista_especies, lista_planetas):
@@ -292,6 +294,7 @@ def listas(lista_peliculas, lista_especies, lista_planetas):
         elif opcion == 3:
             break
 
+#Cumpliendo con la parte D
 #Funcion de busqueda de personajes
 def buscar(personajes):
     busqueda = input("Ingrese el nombre del personaje que desea buscar: ")
@@ -318,8 +321,8 @@ def graficos():
             grafico_naves()
         elif opcion == 2:
             break
-
-
+#Cumpliendo con la parte E del archivo
+#Funcion que se encarga de graficar a los 
 def grafico_personajes():
     planetas = []
     planetas_personajes = []
@@ -365,6 +368,8 @@ def grafico_personajes():
     plt.show()
 
 
+#Cumpliendo con el punto F
+#Funcion encargada de mostrar los graficos de las naves que permiten comparar las caracteristicas propuestas
 def grafico_naves():
     naves = []
     with open('starwars/csv/starships.csv','r') as file:
@@ -432,6 +437,7 @@ def grafico_naves():
         elif opcion == 4:
             break
 
+#cumpliendo con la parte G
 #funcion para mostrar estadistica sobre naves
 def estadisticas():
     naves = []
@@ -563,8 +569,10 @@ def calcular_maximo_minimo(lista, posicion):
         
         return maximo, minimo
 
+#Cumpliendo con los puntos H,I,j 
 #Funcion para crear, modificar y visualizar una mision     
 def mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_naves):
+
 
     while True:
         opciones = ["Construir misión", "Modificar misión", "Visualizar misión", "Salir"]
@@ -584,7 +592,7 @@ def mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_na
             mision_planeta = lista_planetas[int(mision_planeta)-1].nombre
 
 
-
+            #se encarga de enumerar cada nave que vaya mostrando a medida que se vaya recorriendo
             for i, nave in enumerate(lista_naves):
                 print(i+1, nave.name)
             mision_nave = input("Ingresa el numero del naves que desea: ")
@@ -594,7 +602,8 @@ def mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_na
             
             mision_nave = lista_naves[int(mision_nave)-1].name
 
-
+            #Se crea una lista de armas vacia para que a medida que el usuario vaya agregando armas se guarden en esa variable
+            #hasta que el usuario agregue 7 armas 
             maximo = 7
             mision_armas = []
             while len(mision_armas) <= maximo:
@@ -614,7 +623,7 @@ def mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_na
                 if pregunta == "2":
                     break
             
-
+            
             mision_integrantes = []
             while len(mision_integrantes) <= maximo:
                 for i, integrante in enumerate(lista_personajes):
@@ -662,6 +671,8 @@ def mision(lista_planetas, lista_mision, lista_personajes, lista_armas, lista_na
         elif opcion == 3:
             break
 
+#Cumpliendo con el punto K del archivo 
+#Funcion que se encarga de guardar la mision
 def guardar_mision(lista_mision):
     str_misiones = ""
     for mision in range(0, len(lista_mision)):
